@@ -2,13 +2,19 @@
 
 const url = 'http://localhost:3000/ramens';
 
-fetch(url).then(res => res.json()).then(data => appendImages(data));
+let myData;
+
+fetch(url).then(res => res.json()).then(data => {
+    myData = data;
+    appendImages(data);
+});
+
 
 
 function appendImages(data) {
     
     const menuDiv = document.querySelector('#ramen-menu');
-    console.log(data);
+    menuDiv.innerHTML = '';
     data.forEach((data) => {
         
         const ramenImg = document.createElement('img');
@@ -18,7 +24,7 @@ function appendImages(data) {
         ramenImg.addEventListener('click', () => showInfo(data))        
         
         menuDiv.appendChild(ramenImg);
-    })
+    });
     
 }
 
@@ -50,20 +56,15 @@ ramenForm.addEventListener('submit', (e) => {
     const newRating = e.target.querySelector('#new-rating').value;
     const newComment = e.target.querySelector('#new-comment').value;
 
-    const newRamen = [{
+    const newRamen = {
         id: 6,
         name: newName,
         restaurant: newRestaurant,
         image: newImage,
         rating: newRating,
         comment: newComment,
-    }];
-
-    const menuDiv = document.querySelector('#ramen-menu');
-    const ramenImg = document.createElement('img');
-    ramenImg.src = newImage;
-    menuDiv.appendChild(ramenImg);
-
-
-    //appendImages(newRamen);
+    };
+    
+    myData.push(newRamen);
+    appendImages(myData);
 })
