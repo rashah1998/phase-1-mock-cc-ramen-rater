@@ -1,10 +1,10 @@
 // write your code here
 
-const url = 'http://localhost:3000/ramens';
+const baseUrl = 'http://localhost:3000';
 
 let myData;
 
-fetch(url).then(res => res.json()).then(data => {
+fetch(baseUrl + '/ramens').then(res => res.json()).then(data => {
     myData = data;
     appendImages(data);
 });
@@ -14,19 +14,20 @@ fetch(url).then(res => res.json()).then(data => {
 function appendImages(data) {
     
     const menuDiv = document.querySelector('#ramen-menu');
-    menuDiv.innerHTML = '';
-    data.forEach((data) => {
-        
-        const ramenImg = document.createElement('img');
-
-        ramenImg.src = data.image;
-
-        ramenImg.addEventListener('click', () => showInfo(data))        
-        
-        menuDiv.appendChild(ramenImg);
-    });
     
+    showInfo(data[0]);
+
+    data.forEach((data) => {
+
+        const ramenImg = document.createElement('img');
+        ramenImg.src = data.image;
+        ramenImg.addEventListener('click', () => showInfo(data))        
+        menuDiv.appendChild(ramenImg);
+
+    });
 }
+        
+    
 
 function showInfo(ramen) {
     //take in the image, add the image to the #ramen-detail div, and then show the rating and
@@ -50,21 +51,15 @@ const ramenForm = document.querySelector('#new-ramen');
 
 ramenForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const newName = e.target.querySelector('#new-name').value;
-    const newRestaurant = e.target.querySelector('#new-restaurant').value;
-    const newImage = e.target.querySelector('#new-image').value;
-    const newRating = e.target.querySelector('#new-rating').value;
-    const newComment = e.target.querySelector('#new-comment').value;
+    const id = myData.length + 1;
+    const name = e.target.querySelector('#new-name').value;
+    const restaurant = e.target.querySelector('#new-restaurant').value;
+    const image = e.target.querySelector('#new-image').value;
+    const rating = e.target.querySelector('#new-rating').value;
+    const comment = e.target.querySelector('#new-comment').value;
 
-    const newRamen = {
-        id: 6,
-        name: newName,
-        restaurant: newRestaurant,
-        image: newImage,
-        rating: newRating,
-        comment: newComment,
-    };
+    const newRamen = {id, name, restaurant, image, rating, comment};
     
     myData.push(newRamen);
-    appendImages(myData);
+    appendImages([newRamen]);
 })
